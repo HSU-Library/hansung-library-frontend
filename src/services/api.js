@@ -12,15 +12,14 @@ const api = axios.create({
   },
 });
 
-// API 서비스 클래스 정의
 class ApiService {
   /**
    * 모든 도서 목록을 가져오는 함수
-   * @returns {Promise<Array>} 도서 목록 배열
+   * @returns {Promise<Array>} 도서 객체 배열
    */
   static async getBooks() {
     try {
-      const response = await api.get('/get_books');
+      const response = await api.get('/api/books');
       return response.data;
     } catch (error) {
       console.error('도서 목록 조회 실패:', error);
@@ -31,11 +30,11 @@ class ApiService {
   /**
    * 도서 검색 함수
    * @param {string} query - 검색어 (책 제목 또는 저자)
-   * @returns {Promise<Array>} 검색 결과 배열
+   * @returns {Promise<Array>} 검색 결과 도서 배열
    */
   static async searchBooks(query) {
     try {
-      const response = await api.get(`/search?query=${encodeURIComponent(query)}`);
+      const response = await api.get(`/api/search?query=${encodeURIComponent(query)}`);
       return response.data;
     } catch (error) {
       console.error('도서 검색 실패:', error);
@@ -45,11 +44,11 @@ class ApiService {
 
   /**
    * 책 스캔 시작 함수
-   * @returns {Promise<Object>} 스캔 시작 결과
+   * @returns {Promise<Object>} 스캔 시작 결과 객체
    */
   static async startScan() {
     try {
-      const response = await api.post('/scan');
+      const response = await api.post('/api/scan');
       return response.data;
     } catch (error) {
       console.error('스캔 시작 실패:', error);
@@ -59,11 +58,11 @@ class ApiService {
 
   /**
    * 책 스캔 종료 함수
-   * @returns {Promise<Object>} 스캔 종료 결과
+   * @returns {Promise<Object>} 스캔 종료 결과 객체
    */
   static async stopScan() {
     try {
-      const response = await api.post('/scan_exit');
+      const response = await api.post('/api/scan_exit');
       return response.data;
     } catch (error) {
       console.error('스캔 종료 실패:', error);
@@ -73,12 +72,12 @@ class ApiService {
 
   /**
    * 도서 상태 업데이트 함수
-   * @param {Object} scanData - 스캔된 데이터
-   * @returns {Promise<Object>} 업데이트 결과
+   * @param {Object} scanData - 스캔된 데이터 (예: {"3F-A-1-F": ["123", "234"]})
+   * @returns {Promise<Object>} 업데이트 결과 (available/misplaced 등 상태 정보 포함)
    */
   static async updateBookStatus(scanData) {
     try {
-      const response = await api.post('/update_book_status', scanData);
+      const response = await api.post('/api/update_book_status', scanData);
       return response.data;
     } catch (error) {
       console.error('도서 상태 업데이트 실패:', error);
@@ -88,11 +87,11 @@ class ApiService {
 
   /**
    * 로봇 상태 조회 함수
-   * @returns {Promise<Object>} 로봇 상태 정보
+   * @returns {Promise<Object>} 현재 로봇 상태 {status: "normal"|"scanning"|"complete"}
    */
   static async getRobotStatus() {
     try {
-      const response = await api.get('/robot_status');
+      const response = await api.get('/api/robot_status');
       return response.data;
     } catch (error) {
       console.error('로봇 상태 조회 실패:', error);
@@ -103,11 +102,11 @@ class ApiService {
   /**
    * 로봇 상태 설정 함수
    * @param {string} status - 설정할 상태 ('normal', 'scanning', 'complete')
-   * @returns {Promise<Object>} 상태 설정 결과
+   * @returns {Promise<Object>} 상태 변경 결과 {success: boolean, status: string}
    */
   static async setRobotStatus(status) {
     try {
-      const response = await api.post('/set_robot_status', { status });
+      const response = await api.post('/api/set_robot_status', { status });
       return response.data;
     } catch (error) {
       console.error('로봇 상태 설정 실패:', error);
@@ -118,7 +117,9 @@ class ApiService {
   /**
    * 챗봇 대화 API
    * @param {string} message - 사용자 입력 메시지
-   * @param {Array} history - 대화 기록
+   * @param {Array} history - 이전 대화 기록
+   * @returns {Promise<{content: string, sources: Array, usage: Object}>}
+   *  챗봇 응답 내용과 메타데이터
    */
   static async chat(message, history = []) {
     try {
@@ -138,4 +139,4 @@ class ApiService {
   }
 }
 
-export default ApiService; 
+export default ApiService;

@@ -46,7 +46,7 @@ const deptMap = {
   ],
 };
 
-// ✅ 유사 스트리밍(글자-by-글자) 출력 유틸
+// 유사 스트리밍(글자-by-글자) 출력 유틸
 const fakeStream = (full, onChunk, interval = 14) =>
   new Promise(resolve => {
     if (!full) {
@@ -67,7 +67,7 @@ const fakeStream = (full, onChunk, interval = 14) =>
     }, interval);
   });
 
-// ✅ 보조 컴포넌트: 타이핑 버블
+// 보조 컴포넌트: 타이핑 버블
 const TypingBubble = () => (
   <div className="message assistant">
     <img
@@ -354,7 +354,7 @@ const Chat = () => {
                   className="search-button"
                   onClick={() => {
                     const t = new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' });
-                    const message = `${year} ${college} ${major} 학생이 ${semester}에 읽을 책을 추천해줘`;
+                    const message = `한성대학교 ${year} ${college} ${major} 학생이 ${semester}에 읽을 책을 추천해줘`;
                     setMessages(prev => [
                       ...prev,
                       { role: 'user', type: 'text', content: message, timestamp: t }

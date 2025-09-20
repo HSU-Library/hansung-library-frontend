@@ -281,4 +281,4 @@ const scrollSlider = (direction) => {
   );
 };
 
-export default UserHome; 
+export default UserHome;

@@ -46,7 +46,7 @@ const deptMap = {
   ],
 };
 
-// ✅ 유사 스트리밍(글자-by-글자) 출력 유틸
+// 유사 스트리밍(글자-by-글자) 출력 유틸
 const fakeStream = (full, onChunk, interval = 14) =>
   new Promise(resolve => {
     if (!full) {
@@ -67,7 +67,7 @@ const fakeStream = (full, onChunk, interval = 14) =>
     }, interval);
   });
 
-// ✅ 보조 컴포넌트: 타이핑 버블
+// 보조 컴포넌트: 타이핑 버블
 const TypingBubble = () => (
   <div className="message assistant">
     <img
@@ -105,6 +105,9 @@ const Chat = () => {
   const [major, setMajor] = useState('');
   const [semester, setSemester] = useState('');
 
+  // 새 상태: 제안 버튼(추천 질문) 보이기 여부
+  const [showSuggestions, setShowSuggestions] = useState(true);
+
   const messagesEndRef = useRef(null);
   const scrollToBottom = () => {
     // 렌더 완료 후 살짝 늦게 스크롤 → 화면 떨림 방지
@@ -120,7 +123,9 @@ const Chat = () => {
     const time = new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' });
 
     if (type === 'recommend') {
+      // 추천 UI 열면 제안 버튼 숨김
       setRecommendFlow(true);
+      setShowSuggestions(false);
       return;
     }
 
@@ -139,6 +144,7 @@ const Chat = () => {
         return;
     }
 
+    setShowSuggestions(false); // LLM 호출 전 숨김
     setMessages((prev) => [
       ...prev,
       { role: 'user', type: 'text', content: userContent, timestamp: time }
@@ -148,13 +154,15 @@ const Chat = () => {
 
   const callApiAndRender = async (question) => {
     setIsSending(true);
+    setShowSuggestions(false); // LLM 응답이 오기 전엔 제안 숨김
 
-    // 플레이스홀더(타이핑)만 추가
+    // 플레이스홀더(타이핑)만 추가 — 기존 타이핑 항목은 제거하여 중복 방지
     const time = new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' });
-    setMessages(prev => [
-      ...prev,
-      { role: 'assistant', type: 'typing', content: '', timestamp: time }
-    ]);
+    setMessages(prev => {
+      const next = prev.filter(m => !(m.role === 'assistant' && m.type === 'typing'));
+      next.push({ role: 'assistant', type: 'typing', content: '', timestamp: time });
+      return next;
+    });
 
     try {
       const response = await ApiService.chat(question);
@@ -163,7 +171,6 @@ const Chat = () => {
       // 플레이스홀더 제거 후 빈 버블 하나로 교체 → 유사 스트리밍
       setMessages(prev => {
         const next = [...prev];
-        // 뒤에서부터 typing 제거
         for (let i = next.length - 1; i >= 0; i--) {
           if (next[i].role === 'assistant' && next[i].type === 'typing') {
             next.splice(i, 1);
@@ -187,7 +194,6 @@ const Chat = () => {
       });
     } catch (err) {
       console.error('채팅 전송 실패:', err);
-      // 플레이스홀더 제거 후 에러 버블
       setMessages(prev => {
         const next = [...prev];
         for (let i = next.length - 1; i >= 0; i--) {
@@ -208,6 +214,10 @@ const Chat = () => {
       });
     } finally {
       setIsSending(false);
+      // LLM 응답 완료(성공/오류 상관없이) 후 제안 버튼 다시 표시
+      setShowSuggestions(true);
+      // 추천 플로우는 자동으로 닫지 않으려면 아래 줄 주석 처리
+      setRecommendFlow(false);
     }
   };
 
@@ -225,6 +235,63 @@ const Chat = () => {
     setInput('');
 
     await callApiAndRender(q);
+  };
+
+  // 간단한 추천 요청 핸들러
+  const handleRecommendRequest = async () => {
+    const time = new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' });
+
+    // 검증: 학년/학과(또는 십진분류)/학기 선택 여부
+    // 1학년이면 college는 필요없음(십진분류 사용)
+    if (!year || !major || !semester || (year !== '1학년' && !college)) {
+      setMessages(prev => [
+        ...prev,
+        {
+          role: 'assistant',
+          type: 'error',
+          content: '모든 항목을 선택해 주세요.',
+          timestamp: time,
+        },
+      ]);
+      return;
+    }
+
+    // 추가 검증: 2학년 이상이 아니면 컴퓨터공학부 추천 불가(학과 모드일 때)
+    if (year !== '1학년') {
+      const allowedYears = ['2학년', '3학년', '4학년'];
+      if (!(major === '컴퓨터공학부' && allowedYears.includes(year))) {
+        setMessages(prev => [
+          ...prev,
+          {
+            role: 'assistant',
+            type: 'error',
+            content: '해당 데이터는 2학년 이상 컴퓨터공학과 학생의 정보만 포함합니다. 조건을 확인해 주세요.',
+            timestamp: time,
+          },
+        ]);
+        return;
+      }
+    }
+
+    // major가 "000-총류" 처럼 '-' 포함하면 숫자 부분만 추출
+    const majorText = major && major.includes('-') ? major.split('-')[0] : major;
+
+    // 메시지 포맷:
+    const userContent = year === '1학년'
+      ? `한성대학교 ${year} 학생이 ${semester}에 읽을만한 ${majorText}번대 책 중에 읽을만한 책을 추천해줘`
+      : `한성대학교 ${year} ${college} ${majorText} 학생이 ${semester}에 읽을만한 책을 추천해줘`;
+
+    // 추천 UI 숨기고(버블 제거) 제안 영역은 LLM 응답이 끝날 때까지 보이지 않게 처리
+    setRecommendFlow(false);
+    setShowSuggestions(false);
+
+    // 사용자 메시지 기록 및 API 호출
+    setMessages(prev => [
+      ...prev,
+      { role: 'user', type: 'text', content: userContent, timestamp: time },
+    ]);
+
+    await callApiAndRender(userContent);
   };
 
   return (
@@ -289,7 +356,7 @@ const Chat = () => {
           <div ref={messagesEndRef} />
         </ul>
 
-        {messages.length === 1 && messages[0].role === 'assistant' && !recommendFlow && (
+        {showSuggestions && !recommendFlow && (
           <div className="suggested-questions">
             <p>👇 아래 질문 중 하나를 선택해보세요</p>
             <div className="button-group">
@@ -312,33 +379,56 @@ const Chat = () => {
               <p>📚 어떤 기준으로 책을 추천해드릴까요?<br />아래 항목을 모두 선택해주세요.</p>
 
               <div style={{ display: 'flex', flexDirection: 'column', gap: '0.75rem', marginTop: '1rem' }}>
-                {/* 학년 */}
+                {/* 학년 - 선택 시 college/major 초기화 */}
                 <CustomDropdown
                   options={['1학년', '2학년', '3학년', '4학년']}
                   selected={year}
-                  onSelect={setYear}
+                  onSelect={(val) => {
+                    setYear(val);
+                    setCollege('');
+                    setMajor('');
+                  }}
                   placeholder="학년 선택"
                 />
 
-                {/* 단과대학 */}
-                <CustomDropdown
-                  options={Object.keys(deptMap)}
-                  selected={college}
-                  onSelect={(option) => {
-                    setCollege(option);
-                    setMajor('');
-                  }}
-                  placeholder="단과대학 선택"
-                />
-
-                {/* 학과 */}
-                {college && (
+                {/* 단과대학: 1학년이면 숨김, 2~4학년일 때만 표시 (IT공과대학만 활성화) */}
+                {year !== '1학년' && (
                   <CustomDropdown
-                    options={deptMap[college]}
+                    options={Object.keys(deptMap)}
+                    selected={college}
+                    onSelect={(option) => {
+                      setCollege(option);
+                      setMajor('');
+                    }}
+                    placeholder="단과대학 선택"
+                    isOptionDisabled={(option) => option !== 'IT공과대학'}
+                  />
+                )}
+
+                {/* 학과 또는 십진분류표 */}
+                {year === '1학년' ? (
+                  // 1학년인 경우: 대학 선택 없이 십진분류표만 표시
+                  <CustomDropdown
+                    options={['000-총류','100-철학','200-종교','300-사회과학','400-순수과학','500-기술과학','600-예술','700-언어','800-문학','900-역사']}
                     selected={major}
                     onSelect={setMajor}
-                    placeholder="학과 선택"
+                    placeholder="십진분류표 선택 (예: 000,100 ...)"
+                    isOptionDisabled={() => false}
                   />
+                ) : (
+                  // 2~4학년: 선택된 단과대학의 학과 목록 (컴퓨터공학부만 활성)
+                  college && (
+                    <CustomDropdown
+                      options={deptMap[college]}
+                      selected={major}
+                      onSelect={setMajor}
+                      placeholder="학과 선택"
+                      isOptionDisabled={(option) => {
+                        const allowedYears = ['2학년', '3학년', '4학년'];
+                        return !(option === '컴퓨터공학부' && allowedYears.includes(year));
+                      }}
+                    />
+                  )
                 )}
 
                 {/* 학기 */}
@@ -349,34 +439,41 @@ const Chat = () => {
                   placeholder="학기 선택"
                 />
 
-                {/* 추천 요청 */}
-                <button
-                  className="search-button"
-                  onClick={() => {
-                    const t = new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' });
-                    const message = `${year} ${college} ${major} 학생이 ${semester}에 읽을 책을 추천해줘`;
-                    setMessages(prev => [
-                      ...prev,
-                      { role: 'user', type: 'text', content: message, timestamp: t }
-                    ]);
-                    setRecommendFlow(false);
-                    setYear('');
-                    setCollege('');
-                    setMajor('');
-                    setSemester('');
-                    // 바로 API 호출
-                    callApiAndRender(message);
-                  }}
-                  disabled={!year || !college || !major || !semester}
-                >
-                  📖 추천받기
-                </button>
+                {/* 추천 요청 버튼 */}
+                <div style={{ display: 'flex', gap: '0.5rem', marginTop: '0.5rem' }}>
+                  <button
+                    onClick={handleRecommendRequest}
+                    style={{
+                      backgroundColor: '#0b66ff',
+                      color: '#fff',
+                      border: 'none',
+                      padding: '0.5rem 0.9rem',
+                      borderRadius: '6px',
+                      cursor: 'pointer'
+                    }}
+                  >
+                    추천 받기
+                  </button>
+
+                  <button
+                    onClick={() => setRecommendFlow(false)}
+                    style={{
+                      backgroundColor: '#f0f0f0',
+                      color: '#111',
+                      border: '1px solid #ddd',
+                      padding: '0.5rem 0.9rem',
+                      borderRadius: '6px',
+                      cursor: 'pointer'
+                    }}
+                  >
+                    취소
+                  </button>
+                </div>
               </div>
             </div>
           </li>
         )}
       </main>
-
       <form className="chat-form" onSubmit={handleSend}>
         <input
           type="text"

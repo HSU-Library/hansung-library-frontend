@@ -104,6 +104,7 @@ const Chat = () => {
   const [college, setCollege] = useState('');
   const [major, setMajor] = useState('');
   const [semester, setSemester] = useState('');
+  const [field, setField] = useState(''); // 관심 분야 선택 추가 
 
   // 새 상태: 제안 버튼(추천 질문) 보이기 여부
   const [showSuggestions, setShowSuggestions] = useState(true);
@@ -274,12 +275,12 @@ const Chat = () => {
     }
 
     // major가 "000-총류" 처럼 '-' 포함하면 숫자 부분만 추출
-    const majorText = major && major.includes('-') ? major.split('-')[0] : major;
+    const majorText = major;
 
     // 메시지 포맷:
     const userContent = year === '1학년'
-      ? `한성대학교 ${year} 학생이 ${semester}에 읽을만한 ${majorText}번대 책 중에 읽을만한 책을 추천해줘`
-      : `한성대학교 ${year} ${college} ${majorText} 학생이 ${semester}에 읽을만한 책을 추천해줘`;
+      ? `${year} ${semester} 학생이 ${majorText} 분야에서 추천할 도서는?`
+      : `${year} ${majorText} 전공 학생이 ${field} 분야에서 ${semester}에 읽을만한 책을 추천해줘`;
 
     // 추천 UI 숨기고(버블 제거) 제안 영역은 LLM 응답이 끝날 때까지 보이지 않게 처리
     setRecommendFlow(false);
@@ -409,15 +410,16 @@ const Chat = () => {
                 {year === '1학년' ? (
                   // 1학년인 경우: 대학 선택 없이 십진분류표만 표시
                   <CustomDropdown
-                    options={['000-총류','100-철학','200-종교','300-사회과학','400-순수과학','500-기술과학','600-예술','700-언어','800-문학','900-역사']}
+                    options={['총류','철학','종교','사회과학','순수과학','기술과학','예술','언어','문학','역사']}
                     selected={major}
                     onSelect={setMajor}
-                    placeholder="십진분류표 선택 (예: 000,100 ...)"
+                    placeholder="도서 종류 선택 (예: 기술과학, 총류, 문학)"
                     isOptionDisabled={() => false}
                   />
                 ) : (
-                  // 2~4학년: 선택된 단과대학의 학과 목록 (컴퓨터공학부만 활성)
-                  college && (
+                  <>
+                  {/* 2~4학년: 선택된 단과대학의 학과 목록 (컴퓨터공학부만 활성)*/}
+                  {college && (
                     <CustomDropdown
                       options={deptMap[college]}
                       selected={major}
@@ -428,7 +430,16 @@ const Chat = () => {
                         return !(option === '컴퓨터공학부' && allowedYears.includes(year));
                       }}
                     />
-                  )
+                    )}
+                    {/* 분야 선택*/}
+                    <CustomDropdown
+                      options={['총류','철학','종교','사회과학','순수과학','기술과학','예술','언어','문학','역사']}
+                      selected={field}
+                      onSelect={setField}
+                      placeholder="도서 분야 선택 (예: 기술과학, 문학)"
+                      isOptionDisabled={() => false}
+                    />
+                  </>
                 )}
 
                 {/* 학기 */}
@@ -438,6 +449,8 @@ const Chat = () => {
                   onSelect={setSemester}
                   placeholder="학기 선택"
                 />
+
+                
 
                 {/* 추천 요청 버튼 */}
                 <div style={{ display: 'flex', gap: '0.5rem', marginTop: '0.5rem' }}>

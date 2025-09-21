@@ -505,3 +505,78 @@
 .scroll-button.right {
   right: -1rem;
 }
+
+/* BookCard hover overlay (검색 결과의 북카드에 적용) */
+.book-card {
+  border-radius: 8px;
+  overflow: hidden;
+  background: white;
+  box-shadow: 0 6px 18px rgba(0,0,0,0.08);
+  transition: transform 0.18s ease, box-shadow 0.18s ease;
+}
+.book-card:hover {
+  transform: translateY(-6px);
+  box-shadow: 0 12px 30px rgba(10, 60, 150, 0.18);
+}
+
+/* 이미지 래퍼 내부 오버레이 */
+.book-image-wrapper {
+  position: relative;
+  overflow: hidden;
+  height: 220px;
+}
+.book-cover {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  display: block;
+  transition: transform 0.3s ease;
+}
+.book-card:hover .book-cover {
+  transform: scale(1.03);
+}
+
+/* 파란색 전체 오버레이 + 가운데 버튼 */
+.book-overlay {
+  position: absolute;
+  inset: 0;
+  background: rgba(11,102,255,0.12);
+  opacity: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: opacity 0.18s ease, background 0.18s ease;
+}
+.book-card:hover .book-overlay {
+  opacity: 1;
+  background: rgba(11,102,255,0.18);
+}
+
+.overlay-button {
+  background: rgba(11,102,255,0.98);
+  color: #fff;
+  border: none;
+  padding: 0.6rem 1rem;
+  border-radius: 8px;
+  font-weight: 600;
+  cursor: pointer;
+  box-shadow: 0 6px 18px rgba(11,102,255,0.18);
+  transition: transform 0.12s ease;
+}
+.overlay-button:hover {
+  transform: translateY(-2px);
+}
+
+/* 간단한 북 정보 영역 */
+.book-info {
+  padding: 0.6rem 0.8rem;
+}
+.book-title {
+  font-weight: 700;
+  color: #042a6b;
+  margin-bottom: 0.25rem;
+}
+.book-author {
+  font-size: 0.9rem;
+  color: #555;
+}

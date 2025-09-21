@@ -136,7 +136,7 @@ const Chat = () => {
         userContent = '한성대학교 학술정보관의 운영시간 알려줘';
         break;
       case 'loan':
-        userContent = '한성대학교 학술정보관의 대출 기간이 궁금해';
+        userContent = '한성대학교 학술정보관의 신분별 대출 기간/도서 대출 가능 권수';
         break;
       case 'homepage':
         window.open('https://hsel.hansung.ac.kr/', '_blank');

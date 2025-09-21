@@ -212,36 +212,7 @@ const scrollSlider = (direction) => {
             </div>
           )}
         </section>
-{/*
-       
-        <section className="info-section">
-  <div className="info-container">
-    <h3>📖 도서관 정보 안내</h3>
-    <div className="info-grid">
-*/}
-      {/*
-      <div className="info-card">
-        <div className="info-icon">📘</div>
-        <h4>한성대 인기도서</h4>
-        <p>이번 달 가장 많이 대출된 인기 도서를 소개합니다.</p>
-      </div>
 
-      <div className="info-card">
-        <div className="info-icon">🕐</div>
-        <h4>운영시간 안내</h4>
-        <p>평일 09:00 ~ 21:00<br />일요일 및 공휴일 휴관</p>
-      </div>
-
-      <div className="info-card clickable" onClick={() => navigate('/reservation-status')} role="button" title="예약 현황 페이지로 이동">
-        <div className="info-icon">📅</div>
-        <h4>예약 현황 보기</h4>
-        <p>스터디룸, 열람실의 실시간 이용 가능 현황을 확인하세요.</p>
-      </div>
-      
-    </div>
-  </div>
-</section>
-*/}
         <section className="popular-books">
           <div className="popular-books-section">
             <h3>📘 한성대 인기도서 TOP 10</h3>

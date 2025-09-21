@@ -1,4 +1,5 @@
-import React from 'react';
+import React, { useState } from 'react';
+import ApiService from '../services/api';
 import '../styles/BookCard.css';
 
 /**
@@ -17,6 +18,10 @@ import '../styles/BookCard.css';
  * @param {boolean} book.wrong_location - 도서 잘못된 위치 여부
  */
 const BookCard = ({ book }) => {
+  const [isGuiding, setIsGuiding] = useState(false);
+  const [requestId, setRequestId] = useState(null);
+  const [loading, setLoading] = useState(false);
+
   /**
    * 도서 상태에 따른 클래스명과 텍스트를 반환하는 함수
    * @returns {Object} 상태 정보 객체
@@ -59,6 +64,45 @@ const BookCard = ({ book }) => {
     e.target.src = '/default-book.jpg'; // 기본 이미지 경로
   };
 
+  const handleInfoClick = async (e) => {
+    e.stopPropagation();
+    setIsGuiding(true); // 모달 즉시 표시
+    setLoading(true);
+    try {
+      const res = await ApiService.postBookLocation({
+        id: book.id ?? book.barcode,
+        title: book.title,
+        timestamp: new Date().toISOString(),
+      });
+      setRequestId(res?.requestId ?? null);
+      console.log('도서 위치 전송 완료:', book.title, res);
+    } catch (err) {
+      console.error('도서 위치 전송 실패:', err);
+      setIsGuiding(false);
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  const handleCancelGuide = async (e) => {
+    e?.stopPropagation();
+    setLoading(true);
+    try {
+      await ApiService.postBookCancel({
+        id: book.id ?? book.barcode,
+        requestId,
+        timestamp: new Date().toISOString(),
+      });
+      console.log('안내 취소 전송 완료:', book.title);
+    } catch (err) {
+      console.error('안내 취소 전송 실패:', err);
+    } finally {
+      setLoading(false);
+      setIsGuiding(false);
+      setRequestId(null);
+    }
+  };
+
   return (
     <div className="book-card">
       {/* 도서 이미지 */}
@@ -69,6 +113,9 @@ const BookCard = ({ book }) => {
           className="book-image"
           onError={handleImageError}
         />
+        <div className="book-overlay">
+          <button className="overlay-button" onClick={handleInfoClick}>도서 안내</button>
+        </div>
       </div>
 
       {/* 도서 정보 */}
@@ -105,8 +152,33 @@ const BookCard = ({ book }) => {
           <span className="status-text">{statusInfo.text}</span>
         </div>
       </div>
+
+      {isGuiding && (
+        <div className="robot-modal" role="dialog" aria-modal="true" onClick={handleCancelGuide}>
+          <div className="robot-modal-inner" onClick={(e) => e.stopPropagation()}>
+            <p className="robot-modal-message">로봇이 안내중입니다. 잠시만 기다려 주세요.</p>
+            <div className="robot-modal-actions">
+              <button
+                className="robot-wait-button"
+                type="button"
+                disabled
+              >
+                대기 중…
+              </button>
+              <button
+                className="robot-cancel-button"
+                type="button"
+                onClick={handleCancelGuide}
+                disabled={loading}
+              >
+                취소
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
     </div>
   );
 };
 
-export default BookCard; 
+export default BookCard;

@@ -151,4 +151,55 @@
   .book-title {
     font-size: 1rem;
   }
-} 
+}
+
+/* 로봇 안내 모달(간단한 오버레이) */
+.robot-modal {
+  position: fixed;
+  inset: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: rgba(6, 30, 80, 0.45);
+  z-index: 1200;
+  padding: 1rem;
+}
+.robot-modal-inner {
+  background: #fff;
+  border-radius: 10px;
+  padding: 1.1rem 1.2rem;
+  max-width: 420px;
+  width: 100%;
+  box-shadow: 0 12px 36px rgba(4, 34, 90, 0.18);
+  text-align: center;
+}
+.robot-modal-message {
+  margin: 0 0 0.85rem;
+  color: #042a6b;
+  font-weight: 600;
+}
+.robot-modal-actions {
+  display: flex;
+  gap: 0.6rem;
+  justify-content: center;
+}
+.robot-wait-button {
+  background: rgba(11,102,255,0.12);
+  color: #0b66ff;
+  border: none;
+  padding: 0.45rem 0.9rem;
+  border-radius: 8px;
+  cursor: default;
+}
+.robot-cancel-button {
+  background: #fff;
+  color: #0b66ff;
+  border: 1px solid #0b66ff;
+  padding: 0.45rem 0.9rem;
+  border-radius: 8px;
+  cursor: pointer;
+}
+.robot-cancel-button:disabled {
+  opacity: 0.6;
+  cursor: not-allowed;
+}

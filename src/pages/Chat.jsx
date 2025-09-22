@@ -154,25 +154,25 @@ const Chat = () => {
         userContent = "한성대학교 학술정보관의 운영시간 안내";
         break;
       case "return":
-        userContent = "한성대학교 학술정보관의 도서 반납(무인반납함) / 연체 안내";
+        userContent = "한성대학교 학술정보관의 1. 도서 반납 / 2. 무인반납함/ 3. 연체 ";
         break;
       case "extend":
         userContent =
-          "한성대학교 학술정보관의 도서 연장/예약/분실 안내";
+          "한성대학교 학술정보관의 1.도서 연장 2. 도서 예약 3. 도서 분실";
         break;
       case "precautions":
         userContent = "한성대학교 학술정보관 이용 시 주의사항 안내";
         break;
       case "graduate":
-        userContent = "한성대학교 졸업생 및 휴학생 대출/필요서류/열람 안내";
+        userContent = "한성대학교 졸업생 및 휴학생 1.대출 2.필요서류 3.열람 ";
         break;
       case "member":
         userContent =
-          "한성대학교 학술정보관의 성북구민/종로구민 이용 안내";
+          "한성대학교 학술정보관 1.성북구민 2.종로구민 ";
         break;
       case "disability":
         userContent =
-          "한성대학교 학술정보관의 책나래 서비스 / 신청가능 권수 안내";
+          "한성대학교 학술정보관의 1.책나래 서비스 / 2.신청가능 권수 안내";
         break;
       case "homepage":
         window.open("https://hsel.hansung.ac.kr/", "_blank");

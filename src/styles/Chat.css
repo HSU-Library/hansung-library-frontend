@@ -264,6 +264,89 @@
   box-shadow: none;
 }
 
+/* ========== Dropdown (도서 이용 안내 Flow) ========== */
+.loan-dropdown-container {
+  position: relative;
+  display: inline-block;
+}
+
+.loan-dropdown-button {
+  background: var(--hsu-blue);
+  color: #fff;
+  padding: 1.35rem 1.8rem;
+  border-radius: var(--radius-pill);
+  border: none;
+  font-size: 1.575rem;
+  font-weight: 600;
+  cursor: pointer;
+  transition: transform 0.18s ease, box-shadow 0.18s ease, background 0.18s ease;
+  box-shadow: 0 6px 18px rgba(11, 121, 255, 0.2);
+  white-space: nowrap;
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+}
+
+.loan-dropdown-button:hover,
+.loan-dropdown-button.active {
+  transform: translateY(-2px);
+  box-shadow: 0 12px 27px rgba(11, 121, 255, 0.28);
+}
+
+.loan-dropdown-menu {
+  position: absolute;
+  top: 100%;
+  left: 50%;
+  transform: translateX(-50%);
+  background: transparent;
+  border: none;
+  border-radius: var(--radius);
+  box-shadow: none;
+  z-index: 1000;
+  margin-top: 0.75rem;
+  overflow: visible;
+  animation: loanDropdownSlide 0.2s ease-out;
+  min-width: 280px;
+}
+
+@keyframes loanDropdownSlide {
+  from {
+    opacity: 0;
+    transform: translateX(-50%) translateY(-10px);
+  }
+  to {
+    opacity: 1;
+    transform: translateX(-50%) translateY(0);
+  }
+}
+
+.loan-dropdown-menu button {
+  display: block;
+  width: 100%;
+  background: var(--white);
+  border: none;
+  padding: 1.2rem 1.5rem;
+  text-align: left;
+  cursor: pointer;
+  font-size: 1.425rem;
+  color: var(--text-dark);
+  transition: background 0.15s ease;
+  margin-bottom: 0.5rem;
+  border-radius: var(--radius);
+  box-shadow: var(--shadow-sm);
+}
+
+.loan-dropdown-menu button:last-child {
+  margin-bottom: 0;
+}
+
+.loan-dropdown-menu button:hover {
+  background: var(--bg-light);
+}
+
+.loan-dropdown-menu button:active {
+  background: var(--assistant-bg);
+}
 /* ========== Dropdown (Recommend Flow) ========== */
 .chat-dropdown {
   font-size: 1.5rem;

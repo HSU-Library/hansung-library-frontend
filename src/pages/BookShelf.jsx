@@ -64,8 +64,8 @@ const BookShelf = () => {
     const grouped = {};
     
     books.forEach(book => {
-      // 특정 위치의 도서만 처리 (기존 로직과 동일)
-      if (['1F-1-A-1-a', '1F-1-A-2-a', '2F-1-A-1-a', '2F-1-A-2-a'].includes(book.location)) {
+      // 특정 위치의 도서만 처리 
+      if (['1F-a-1', '1F-a-2', '1F-a-3', '1F-a-4'].includes(book.location)) {
         const location = book.location;
         
         if (!grouped[location]) {

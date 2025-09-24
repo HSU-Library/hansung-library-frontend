@@ -1,0 +1,71 @@
+/* Place your CSS styles for ProtectedRoute here */
+
+/* 관리자 인증 오버레이 기본 스타일 */
+.admin-auth-overlay {
+  position: fixed;
+  inset: 0;
+  background: rgba(0,0,0,0.6);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 1100;
+}
+
+.admin-auth-modal {
+  background: #fff;
+  padding: 2rem;
+  border-radius: 12px;
+  max-width: 420px;
+  width: 90%;
+  box-shadow: 0 18px 48px rgba(0,0,0,0.25);
+  text-align: center;
+}
+
+.admin-auth-modal h2 {
+  margin: 0 0 0.75rem;
+}
+
+.admin-code-input {
+  width: 100%;
+  padding: 0.75rem;
+  border: 2px solid #e5e7eb;
+  border-radius: 8px;
+  font-size: 1rem;
+  margin-top: 0.5rem;
+  margin-bottom: 0.75rem;
+}
+
+.admin-code-input:focus {
+  outline: none;
+  border-color: #0b66ff;
+}
+
+.auth-error {
+  color: #e11d48;
+  margin: 0.4rem 0 0.8rem;
+}
+
+.auth-buttons {
+  display: flex;
+  gap: 0.6rem;
+  justify-content: center;
+}
+
+.auth-submit-btn, .auth-cancel-btn {
+  padding: 0.6rem 1.1rem;
+  border-radius: 8px;
+  font-weight: 600;
+  cursor: pointer;
+}
+
+.auth-submit-btn {
+  background: #0b66ff;
+  color: #fff;
+  border: none;
+}
+
+.auth-cancel-btn {
+  background: #f8f9fa;
+  color: #333;
+  border: 1px solid #e5e7eb;
+}

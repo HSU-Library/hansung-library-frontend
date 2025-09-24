@@ -18,48 +18,51 @@ import './App.css';
 function App() {
   return (
     <AuthProvider>
-      <Router>
-        <div className="App">
-          <Routes>
-            <Route path="/" element={<UserHome />} />
+      {/* 전역 스케일 래퍼 - 주석 처리하면 즉시 원래 크기로 돌아옵니다 */}
+      <div className="ui-scale">
+        <Router>
+          <div className="App">
+            <Routes>
+              <Route path="/" element={<UserHome />} />
 
-            {/* 관리자 인증 페이지(보호하지 않음) */}
-            <Route path="/admin/auth" element={<AdminAuth />} />
+              {/* 관리자 인증 페이지(보호하지 않음) */}
+              <Route path="/admin/auth" element={<AdminAuth />} />
 
-            {/* 관리자 모든 하위 경로 보호 */}
-            <Route
-              path="/admin"
-              element={
-                <ProtectedRoute>
-                  <AdminHome />
-                </ProtectedRoute>
-              }
-            />
-            <Route
-              path="/admin/books"
-              element={
-                <ProtectedRoute>
-                  <Books />
-                </ProtectedRoute>
-              }
-            />
-            <Route
-              path="/admin/book-shelf"
-              element={
-                <ProtectedRoute>
-                  <BookShelf />
-                </ProtectedRoute>
-              }
-            />
+              {/* 관리자 모든 하위 경로 보호 */}
+              <Route
+                path="/admin"
+                element={
+                  <ProtectedRoute>
+                    <AdminHome />
+                  </ProtectedRoute>
+                }
+              />
+              <Route
+                path="/admin/books"
+                element={
+                  <ProtectedRoute>
+                    <Books />
+                  </ProtectedRoute>
+                }
+              />
+              <Route
+                path="/admin/book-shelf"
+                element={
+                  <ProtectedRoute>
+                    <BookShelf />
+                  </ProtectedRoute>
+                }
+              />
 
-            {/* Chat 페이지 */}
-            <Route path="/chat" element={<Chat />} />
+              {/* Chat 페이지 */}
+              <Route path="/chat" element={<Chat />} />
 
-            {/* 기본 리다이렉트 */}
-            <Route path="*" element={<Navigate to="/" replace />} />
-          </Routes>
-        </div>
-      </Router>
+              {/* 기본 리다이렉트 */}
+              <Route path="*" element={<Navigate to="/" replace />} />
+            </Routes>
+          </div>
+        </Router>
+      </div>
     </AuthProvider>
   );
 }

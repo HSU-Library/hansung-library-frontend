@@ -22,3 +22,14 @@
   height: 100%;
   object-fit: contain;
 }
+
+/* 버튼 자체 크기 과하지 않게 */
+.chat-button, .chat-fab {
+  width: clamp(2.5rem, 7vw, 3.25rem);
+  height: clamp(2.5rem, 7vw, 3.25rem);
+}
+/* 아이콘 크기 축소 */
+.chat-button .icon, .chat-fab .icon, .chat-icon, .chat-button img {
+  width: var(--icon-md);
+  height: var(--icon-md);
+}

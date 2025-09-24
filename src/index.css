@@ -16,3 +16,37 @@ code {
   font-family: source-code-pro, Menlo, Monaco, Consolas, 'Courier New',
     monospace;
 } */
+
+/* 전역: 유동 폰트 크기(노트북 기준 1024px에 최적화) */
+html {
+  /* 0.95rem ~ 1rem 사이에서 화면폭에 따라 유동 */
+  font-size: clamp(0.95rem, 0.9vw, 1rem);
+}
+
+/* 기본 줄간격 */
+body {
+  line-height: 1.5;
+}
+
+/* 공통 컨테이너 유틸: 노트북 기준 최대 폭 64rem, 좌우 2% 여백 */
+.page {
+  max-width: min(64rem, 96%);
+  margin-inline: auto;
+}
+
+:root {
+  --icon-sm: clamp(1rem, 1.8vw, 1.25rem);
+  --icon-md: clamp(1.25rem, 2.4vw, 1.75rem);
+  --icon-lg: clamp(1.5rem, 3vw, 2rem);
+  /* 전역 UI 스케일 → 1로 바꾸면 즉시 원복됩니다 */
+  --ui-scale: 0.67;
+}
+
+/* 전체 앱을 축소 렌더링하는 래퍼 */
+.ui-scale {
+  transform: scale(var(--ui-scale));
+  transform-origin: top left;
+  /* 축소로 인해 클릭 영역이 줄어드는 문제를 방지하기 위해
+     래퍼의 논리적 크기를 확대하여 뷰포트에 꽉 차도록 계산 */
+  width: calc(100% / var(--ui-scale));
+}

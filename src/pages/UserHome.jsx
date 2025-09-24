@@ -5,12 +5,14 @@ import BookCard from '../components/BookCard';
 import ApiService from '../services/api';
 import '../styles/UserHome.css';
 import ChatButton from '../components/ChatButton';
+import { useAuth } from '../contexts/AuthContext';
 /**
  * 사용자 메인 페이지 컴포넌트
  * 간단한 도서 검색 기능과 관리자 페이지로의 링크를 제공
  */
 const UserHome = () => {
   const navigate = useNavigate();
+  const { adminLogout } = useAuth();
   // 검색 결과 상태 관리
   const [searchResults, setSearchResults] = useState([]);
   // 검색 중 로딩 상태 관리
@@ -50,7 +52,8 @@ const UserHome = () => {
    * 관리자 페이지로 이동하는 함수
    */
   const handleGoToAdmin = () => {
-    navigate('/admin');
+    adminLogout();              // 기존 인증 상태 제거
+    navigate('/admin/auth');    // 인증 페이지로 이동
   };
   /*임시 목 데이터*/
 const mockPopularBooks = [

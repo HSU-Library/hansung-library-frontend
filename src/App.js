@@ -1,10 +1,13 @@
 import React from 'react';
 import { BrowserRouter as Router, Routes, Route, Navigate } from 'react-router-dom';
+import { AuthProvider } from './contexts/AuthContext';
+import ProtectedRoute from './components/ProtectedRoute';
 import UserHome from './pages/UserHome';
 import AdminHome from './pages/AdminHome';
 import Books from './pages/Books';
 import BookShelf from './pages/BookShelf';
 import Chat from './pages/Chat';
+import AdminAuth from './pages/AdminAuth';
 import './App.css';
 
 /**
@@ -14,29 +17,50 @@ import './App.css';
  */
 function App() {
   return (
-    <Router>
-      <div className="App">
-        {/* 라우트 설정 */}
-        <Routes>
-          {/* 사용자 메인 페이지 (기본 페이지) */}
-          <Route path="/" element={<UserHome />} />
-          
-          {/* 관리자 페이지들 */}
-          <Route path="/admin" element={<AdminHome />} />
-          <Route path="/admin/books" element={<Books />} />
-          <Route path="/admin/book-shelf" element={<BookShelf />} />
-          
-          {/* 관리자 페이지로 리다이렉트 */}
-          <Route path="/books" element={<Navigate to="/admin/books" replace />} />
-          <Route path="/book-shelf" element={<Navigate to="/admin/book-shelf" replace />} />
-          
-          {/* 기본 리다이렉트 - 잘못된 경로는 사용자 메인 페이지로 */}
-          <Route path="*" element={<Navigate to="/" replace />} />
-          {/* Chat 페이지 */}
-          <Route path="/chat" element={<Chat />} /> 
-        </Routes>
-      </div>
-    </Router>
+    <AuthProvider>
+      <Router>
+        <div className="App">
+          <Routes>
+            <Route path="/" element={<UserHome />} />
+
+            {/* 관리자 인증 페이지(보호하지 않음) */}
+            <Route path="/admin/auth" element={<AdminAuth />} />
+
+            {/* 관리자 모든 하위 경로 보호 */}
+            <Route
+              path="/admin"
+              element={
+                <ProtectedRoute>
+                  <AdminHome />
+                </ProtectedRoute>
+              }
+            />
+            <Route
+              path="/admin/books"
+              element={
+                <ProtectedRoute>
+                  <Books />
+                </ProtectedRoute>
+              }
+            />
+            <Route
+              path="/admin/book-shelf"
+              element={
+                <ProtectedRoute>
+                  <BookShelf />
+                </ProtectedRoute>
+              }
+            />
+
+            {/* Chat 페이지 */}
+            <Route path="/chat" element={<Chat />} />
+
+            {/* 기본 리다이렉트 */}
+            <Route path="*" element={<Navigate to="/" replace />} />
+          </Routes>
+        </div>
+      </Router>
+    </AuthProvider>
   );
 }
 

@@ -58,3 +58,10 @@
   font-weight: 600;
   background: rgba(0,0,0,0.04);
 }
+
+.dropdown-arrow, .dropdown-icon {
+  width: var(--icon-sm);
+  height: var(--icon-sm);
+  font-size: var(--icon-sm);
+  line-height: 1;
+}

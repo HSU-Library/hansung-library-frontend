@@ -5,6 +5,64 @@
   position: relative;
 }
 
+/* 관리자 버튼은 그대로 상단 고정 */
+.admin-link-container { top: 1.25rem; right: 1.25rem; }
+
+/* 헤더: 높이 과하지 않게 */
+.user-header {
+  background: linear-gradient(135deg, #0b79ff 0%, #4919c2 100%);
+  text-align: center;
+  padding: 3rem 2rem 1.5rem;
+  color: white;
+}
+.main-title { font-size: clamp(1.8rem, 3.6vw, 3rem); }
+.subtitle { font-size: clamp(1rem, 2.1vw, 1.2rem); }
+
+/* 메인 컨텐츠: 노트북 기준 최대폭 */
+.user-main-content {
+  max-width: min(64rem, 96%);
+  margin: 4rem auto;
+  padding: 0 1rem 3rem;
+}
+
+/* 히어로 이미지 높이 유동화(모바일에서 과한 높이 방지) */
+.hero-image { height: clamp(12rem, 30vh, 18rem); }
+
+/* 검색 섹션: 한 화면에 들어오도록 여백/패딩 최적화 */
+.search-section { margin-bottom: 3rem; }
+.search-container {
+  padding: clamp(1.5rem, 2.5vw, 3rem);
+  max-width: 100%;
+  width: 100%;
+}
+
+/* 결과 그리드: 카드 최소 너비 유동화로 1024px에서 3~4열 구성 */
+.book-cards-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(clamp(14rem, 28vw, 20rem), 1fr));
+  gap: clamp(1rem, 2vw, 2rem);
+}
+
+/* 인기 도서 섹션 카드 폭/높이 유동화 */
+.popular-books-slider { gap: clamp(0.75rem, 2vw, 1.5rem); }
+.book-rank-item { width: clamp(7rem, 14vw, 10rem); }
+.book-image-wrapper { height: clamp(11rem, 20vw, 15rem); }
+
+/* 스크롤 버튼 크기 유동화 */
+.scroll-button {
+  font-size: 1em;
+  width: 2.5rem;
+  height: 2.5rem;
+  top: 40%;
+}
+
+/* 사용자 메인 페이지 스타일 */
+.user-home-page {
+  min-height: 100vh;
+  background: linear-gradient(135deg, #f5f7fa 0%, #c3cfe2 100%);
+  position: relative;
+}
+
 /* 관리자 페이지 링크 */
 .admin-link-container {
   position: fixed;
@@ -579,4 +637,11 @@
 .book-author {
   font-size: 0.9rem;
   color: #555;
+}
+
+/* 기존 .scroll-button → 인기 도서 섹션 전용으로 범위 한정 */
+.popular-books .scroll-button {
+  font-size: clamp(0.9rem, 2.2vw, 1rem);
+  width: clamp(2rem, 5.2vw, 2.5rem);
+  height: clamp(2rem, 5.2vw, 2.5rem);
 }

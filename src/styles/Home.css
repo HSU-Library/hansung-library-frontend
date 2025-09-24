@@ -2,15 +2,12 @@
 .home-page {
   min-height: 100vh;
   background: linear-gradient(135deg, #f5f7fa 0%, #c3cfe2 100%);
-  /* 1920x1200 아이패드 환경 최적화 기본 너비 지정 (컴포넌트에서 scale 처리) */
-  width: 1920px;
+  width: 100%;
   margin: 0 auto;
-  /* 기본 폰트 크기 키워서 전체 요소가 더 크게 보이도록 조정 */
-  font-size: 16px;
 }
 
 .main-content {
-  max-width: 1200px;
+  max-width: min(64rem, 96%);
   margin: 0 auto;
   padding: 2rem;
 }
@@ -115,18 +112,19 @@
   box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1);
 }
 
+/* 검색 결과 카드 그리드: 카드 최소 너비 유동화 */
+.book-cards-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(clamp(14rem, 26vw, 20rem), 1fr));
+  gap: 2rem;
+}
+
 .results-title {
   margin: 0 0 2rem 0;
   font-size: 1.5rem;
   font-weight: bold;
   color: #333;
   text-align: center;
-}
-
-.book-cards-grid {
-  display: grid;
-  grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
-  gap: 2rem;
 }
 
 .no-results {

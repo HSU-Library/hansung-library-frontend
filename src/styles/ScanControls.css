@@ -1,30 +1,20 @@
 /* 스캔 제어 컴포넌트 스타일 */
 .scan-controls {
   background: white;
-  border-radius: 15px;
+  border-radius: 0.9375rem;              /* 15px */
   padding: 2rem;
-  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1);
-  max-width: 600px;
+  box-shadow: 0 0.25rem 1.25rem rgba(0,0,0,0.1); /* 0 4px 20px */
+  max-width: min(40rem, 96%);            /* 640px → 상대 */
   margin: 0 auto;
 }
 
-.scan-buttons {
-  display: flex;
-  gap: 1rem;
-  margin-bottom: 1.5rem;
-  flex-wrap: wrap;
-  justify-content: center;
-}
+.scan-buttons { gap: 1rem; margin-bottom: 1.5rem; }
 
 .scan-button {
   padding: 1rem 2rem;
-  border: none;
-  border-radius: 25px;
+  border-radius: 1.5625rem;              /* 25px */
+  min-width: 9.375rem;                   /* 150px */
   font-size: 1rem;
-  font-weight: 600;
-  cursor: pointer;
-  transition: all 0.3s ease;
-  min-width: 150px;
 }
 
 .start-scan {
@@ -57,12 +47,11 @@
   transform: translateY(0);
 }
 
-.scan-status {
-  display: flex;
-  align-items: center;
-  justify-content: center;
+.scan-status, .robot-status {
   gap: 1rem;
   padding: 1rem;
+  border-radius: 0.625rem;               /* 10px */
+  min-height: 3.75rem;                   /* 60px */
   background: #f8f9fa;
   border-radius: 10px;
   margin-bottom: 1rem;
@@ -82,8 +71,9 @@
 }
 
 .spinner {
-  width: 30px;
-  height: 30px;
+  width: clamp(1.25rem, 3.5vw, 1.5rem);
+  height: clamp(1.25rem, 3.5vw, 1.5rem);
+  border-width: 0.15rem;
   border: 3px solid #f3f3f3;
   border-top: 3px solid #667eea;
   border-radius: 50%;
@@ -177,4 +167,4 @@
   .status-text {
     font-size: 1rem;
   }
-} 
+}

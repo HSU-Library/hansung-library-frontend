@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState } from 'react';
 // import { useAuth } from '../contexts/AuthContext'; // 제거
 // import { useNavigate } from 'react-router-dom';    // 제거
 import Header from '../components/Header';
@@ -17,20 +17,6 @@ const AdminHome = () => {
   const [searchResults, setSearchResults] = useState([]);
   const [isSearching, setIsSearching] = useState(false);
   const [hasSearched, setHasSearched] = useState(false);
-
-  // 화면 스케일링(1920x1200 기준)
-  const [scale, setScale] = useState(1);
-  useEffect(() => {
-    const computeScale = () => {
-      const scaleW = window.innerWidth / 1920;
-      const scaleH = window.innerHeight / 1200;
-      const s = Math.min(scaleW, scaleH, 1);
-      setScale(s);
-    };
-    computeScale();
-    window.addEventListener('resize', computeScale);
-    return () => window.removeEventListener('resize', computeScale);
-  }, []);
 
   // 도서 검색
   const handleSearch = async (query) => {
@@ -55,18 +41,10 @@ const AdminHome = () => {
   };
 
   return (
-    <div
-      className="home-page"
-      style={{
-        transform: `scale(${scale})`,
-        transformOrigin: 'top center',
-        width: '1920px',
-        margin: '0 auto',
-      }}
-    >
+    <div className="admin-home-page">
       <Header />
 
-      <main className="main-content" style={{ padding: 24 }}>
+      <main className="admin-main-content" style={{ padding: '1.5rem' }}>
         {/* 검색 섹션 */}
         <section className="search-section">
           <SearchBar
@@ -121,6 +99,12 @@ const AdminHome = () => {
           <ScanControls />
         </section>
       </main>
+      {/* 푸터 */}
+      <footer className="user-footer">
+        <div className="footer-content">
+          <p>&copy; 2025 한성대학교 도서관 검색 시스템</p>
+        </div>
+      </footer>
     </div>
   );
 };
